@@ -10,7 +10,7 @@ using MQTTnet.Server.Mqtt;
 
 namespace MQTTnet.Server.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     public class RetainedApplicationMessagesController : Controller
     {

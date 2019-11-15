@@ -9,7 +9,7 @@ using MQTTnet.Server.Web;
 
 namespace MQTTnet.Server.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     public class ScriptsController : Controller
     {

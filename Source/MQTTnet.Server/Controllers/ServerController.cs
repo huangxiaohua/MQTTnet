@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace MQTTnet.Server.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     public class ServerController : Controller
     {
