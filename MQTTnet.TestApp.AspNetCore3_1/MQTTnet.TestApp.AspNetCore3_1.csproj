@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Source\MQTTnet.AspnetCore\MQTTnet.AspNetCore.csproj" />
+  </ItemGroup>
+
 </Project>

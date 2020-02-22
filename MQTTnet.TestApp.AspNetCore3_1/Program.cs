@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using MQTTnet.AspNetCore;
 
 namespace MQTTnet.TestApp.AspNetCore3_1
 {
@@ -20,7 +21,12 @@ namespace MQTTnet.TestApp.AspNetCore3_1
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseKestrel(o =>
+                    {
+                        o.ListenAnyIP(1883, l => l.UseMqtt());
+                        o.ListenAnyIP(5000);
+                    })
+                    .UseStartup<Startup>();
                 });
     }
 }
