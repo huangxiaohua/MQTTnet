@@ -21,12 +21,7 @@ namespace MQTTnet.TestApp.AspNetCore3_1
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseKestrel(o =>
-                    {
-                        o.ListenAnyIP(1883, l => l.UseMqtt());
-                        o.ListenAnyIP(5000);
-                    })
-                    .UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>();
                 });
     }
 }

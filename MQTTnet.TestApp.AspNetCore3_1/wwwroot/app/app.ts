@@ -1,6 +1,6 @@
 ﻿import { connect } from "mqtt";
 
-var client = connect('ws://' + location.host + '/mqtt',
+var client = connect('wss://' + location.host + '/mqtt',
     {
         clientId: "client" + Math.floor(Math.random() * 6) + 1
     });
