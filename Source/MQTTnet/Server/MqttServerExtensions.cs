@@ -22,6 +22,7 @@ namespace MQTTnet.Server
             return server.UseClientConnectedHandler(new MqttServerClientConnectedHandlerDelegate(handler));
         }
 
+
         public static IMqttServer UseClientConnectedHandler(this IMqttServer server, Action<MqttServerClientConnectedEventArgs> handler)
         {
             if (server == null) throw new ArgumentNullException(nameof(server));

@@ -25,15 +25,15 @@ namespace MQTTnet.TestApp.AspNetCore3_1
                 .WithDefaultEndpointPort(1883)
                 .WithClientId("sdfsd")
                 .Build();
-
             services
-                .AddHostedMqttServer(mqttServerOptions)
                 .AddMqttConnectionHandler()
                 .AddMqttWebSocketServerAdapter()
                 .AddMqttTcpServerAdapter()
-                .AddConnections();
-                
+                .AddConnections()
+                .AddHostedMqttServer(mqttServerOptions);
 
+
+            services.AddSingleton<IHostedService, TokenRefreshService>();
             //services.AddHostedMqttServerEx(mqttServerOptions);
 
         }
@@ -61,30 +61,51 @@ namespace MQTTnet.TestApp.AspNetCore3_1
             //{
             //    options.WebSockets.SubProtocolSelector = MQTTnet.AspNetCore.ApplicationBuilderExtensions.SelectSubProtocol;
             //}));
-
-            app.UseMqttEndpoint("/mqtt");
             app.UseMqttServer(server =>
             {
-                
-                server.StartedHandler = new MqttServerStartedHandlerDelegate((args) =>
+
+                server.StartedHandler = new MqttServerStartedHandlerDelegate(async args =>
                 {
 
-                    return Task.Run(() =>
+                    Console.WriteLine("mqtt-->started...");
+
+                    var msg = new MqttApplicationMessageBuilder()
+                        .WithPayload("Mqtt is awesome")
+                        .WithTopic("message");
+
+                    while (true)
                     {
-                        Console.WriteLine($"----->start: {args.ToString()}");
-                        //LogProvide.WriteFile("mqtt_connect", $"----->connected: {args.ClientId}");
-                    });
+                        try
+                        {
+                            await server.PublishAsync(msg.Build());
+                            msg.WithPayload("Mqtt is still awesome at " + DateTime.Now);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                        }
+                        finally
+                        {
+                            await Task.Delay(TimeSpan.FromSeconds(2));
+                        }
+                    }
                 });
 
-                
 
-                server.UseClientConnectedHandler(async args => {
+
+
+                server.UseClientConnectedHandler(async args =>
+                {
+                    Console.WriteLine("sdff");
                     var msg = new MqttApplicationMessageBuilder()
                         .WithPayload("Mqtt is awesome")
                         .WithTopic("message");
                     await server.PublishAsync(msg.Build());
                 });
             });
+
+            app.UseMqttEndpoint("/mqtt");
+           
             //app.UseMqttServerEx(server =>
             //{
 
@@ -111,6 +132,8 @@ namespace MQTTnet.TestApp.AspNetCore3_1
                 RequestPath = "/node_modules",
                 FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "node_modules"))
             });
+
+            ServiceProvides.Instance = app.ApplicationServices;
         }
 
         private void Server_ClientConnectionValidator(IMqttServerEx server, MqttServerClientConnectionValidatorEventArgs args)

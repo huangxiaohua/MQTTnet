@@ -11,4 +11,14 @@ namespace MQTTnet.Server
 
         public string ClientId { get; }
     }
+
+    public class MqttServerStartedEventArgs : EventArgs
+    {
+        public MqttServerStartedEventArgs()
+        {
+            //ClientId = clientId ?? throw new ArgumentNullException(nameof(clientId));
+        }
+
+        //public string ClientId { get; }
+    }
 }
